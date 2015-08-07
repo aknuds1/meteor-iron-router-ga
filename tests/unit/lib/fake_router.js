@@ -6,8 +6,8 @@ FakeRouter.prototype.configure = function(options) {
     this.options = options;
 };
 
-FakeRouter.prototype.route = function(name, options) {
-    this.routes[name] = new FakeRoute(name, options);
+FakeRouter.prototype.route = function(name, handler, options) {
+    this.routes[name] = new FakeRoute(name, handler, options);
 
     return this.routes[name];
 };
@@ -25,8 +25,12 @@ FakeRouter.prototype.executeRoute = function(name) {
 };
 
 
-var FakeRoute = function(name, options) {
+var FakeRoute = function(name, handler, options) {
+    if (options == null && typeof handler !== 'function') {
+        options = handler;
+    }
     this.name = this.path = name;
+    this.handler = typeof handler === 'function' ? handler : function () {};
     this.options = options;
     this.renderedTemplate = null;
     this.nextCallCount = 0;
@@ -53,6 +57,7 @@ FakeRoute.prototype.execute = function() {
 
     this.options.action && this.options.action.apply(this, args);
     this.options.onAfterAction && this.options.onAfterAction.apply(this, args);
+    this.handler();
 };
 
 FakeRoute.prototype.run = function() {
