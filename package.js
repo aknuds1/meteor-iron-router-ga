@@ -11,7 +11,7 @@ Package.onUse(function(api) {
     api.use([ 'templating', 'iron:router@1.0.0' ], 'client');
 
     api.addFiles([
-        'lib/head.html',
+        'lib/body.html',
         'lib/ga.js',
         'lib/router.js'
     ], 'client');
